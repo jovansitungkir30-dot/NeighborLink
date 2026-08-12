@@ -75,7 +75,7 @@ export function Footer() {
 
         <div className="flex flex-col items-center gap-4 border-t border-slate-100 py-8 dark:border-white/10 sm:flex-row sm:justify-between">
           <p className="text-xs text-slate-400 dark:text-slate-500">
-            © {new Date().getFullYear()} NeighborLink. Built for the Humanity OS competition.
+            © {new Date().getFullYear()} NeighborLink. All rights reserved.
           </p>
           <div className="flex items-center gap-3">
             {socials.map((s) => (

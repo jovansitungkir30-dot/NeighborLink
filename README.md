@@ -1,6 +1,6 @@
 # 🏡 Harmony Village — NeighborLink
 
-**Bukan website biasa — ini desa 3D yang bisa dijelajahi.** Dibuat untuk **TECHSOFT 2026 · Humanity OS**, NeighborLink adalah platform yang menghubungkan tetangga lewat sebuah desa digital interaktif: setiap rumah punya cerita, setiap warga punya kebutuhan, dan setiap klik bisa jadi awal dari bantuan nyata.
+**Bukan website biasa — ini desa 3D yang bisa dijelajahi.** NeighborLink adalah platform yang menghubungkan tetangga lewat sebuah desa digital interaktif: setiap rumah punya cerita, setiap warga punya kebutuhan, dan setiap klik bisa jadi awal dari bantuan nyata.
 
 ![Tech](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black) ![Tech](https://img.shields.io/badge/Three.js-r185-000000?logo=three.js&logoColor=white) ![Tech](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white) ![Tech](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 

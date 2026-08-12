@@ -83,7 +83,7 @@ export function AboutDestination() {
         </div>
 
         <p className="border-t border-white/10 pt-4 text-center text-xs text-white/40">
-          Dibuat untuk TECHSOFT 2026 · Humanity OS — eksperimen menghubungkan teknologi dan kemanusiaan.
+          Sebuah eksperimen menghubungkan teknologi dan kemanusiaan.
         </p>
       </motion.div>
     </div>

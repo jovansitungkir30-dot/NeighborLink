@@ -179,7 +179,7 @@ export function ContactDestination() {
 
         <div className="border-t border-white/10 pt-4 text-center">
           <p className="text-sm italic text-white/70">&ldquo;Setiap Komunitas Hebat Dimulai Dari Satu Tetangga.&rdquo;</p>
-          <p className="mt-2 text-xs text-white/40">Dibuat dengan ❤️ untuk Humanity OS</p>
+          <p className="mt-2 text-xs text-white/40">Dibuat dengan ❤️ untuk warga Harmony Village</p>
         </div>
       </motion.div>
     </div>

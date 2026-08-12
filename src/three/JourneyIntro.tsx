@@ -81,7 +81,7 @@ export function JourneyIntro({ onBegin }: JourneyIntroProps) {
               transition={{ duration: 1, delay: 3.2 }}
               className="mb-4 text-xs font-semibold uppercase tracking-[0.4em] text-white/70"
             >
-              TECHSOFT 2026 · Humanity OS
+              Selamat Datang di
             </motion.span>
             <motion.h1
               initial={{ opacity: 0, y: 26 }}
