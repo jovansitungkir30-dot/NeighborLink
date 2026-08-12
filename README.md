@@ -1,14 +1,28 @@
-# 🏡 Harmony Village — NeighborLink
+# NeighborLink
 
-**Bukan website biasa — ini desa 3D yang bisa dijelajahi.** NeighborLink adalah platform yang menghubungkan tetangga lewat sebuah desa digital interaktif: setiap rumah punya cerita, setiap warga punya kebutuhan, dan setiap klik bisa jadi awal dari bantuan nyata.
+## Instansi
+Politeknik Siber dan Sandi Negara
 
-![Tech](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black) ![Tech](https://img.shields.io/badge/Three.js-r185-000000?logo=three.js&logoColor=white) ![Tech](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white) ![Tech](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+## Anggota Tim
+- Ketua        : Jovan Diego Benedictus Situngkir
+  - Anggota 1: Johanes Enda Panahatan Simorangkir
+
+## Deskripsi Karya
+NeighborLink lahir dari keresahan akan isolasi sosial di lingkungan tempat tinggal modern: tetangga yang tinggal berdampingan tapi jarang benar-benar saling mengenal, sementara banyak kebutuhan sehari-hari warga — mulai dari bantuan tenaga, keahlian, sampai sekadar teman bicara — sebenarnya bisa dipenuhi oleh tetangga sendiri jika saja ada ruang yang mempertemukan mereka.
+
+Alih-alih dashboard komunitas yang datar, NeighborLink dibangun sebagai desa digital 3D yang bisa dijelajahi secara bebas. Seluruh situs hidup dalam satu dunia Three.js yang persisten: setiap "halaman" (Beranda, Tentang, Jelajahi Desa, Kontak) adalah destinasi kamera yang terbang sinematik, bukan reload halaman biasa. Di dalam desa, 40+ warga punya cerita, kebutuhan, dan rekomendasi pencocokan relawan masing-masing, sehingga menjelajah desa terasa seperti benar-benar berkeliling dan mengenal tetangga — bukan sekadar mengisi form.
+
+Tujuan utama pembuatan sistem ini adalah menurunkan hambatan sosial untuk saling membantu antartetangga: mempermudah warga menemukan siapa di sekitarnya yang butuh bantuan, apa bantuan itu, dan bagaimana cara terlibat — baik merespons kebutuhan spesifik seseorang maupun mendaftar sebagai relawan umum sesuai minat.
+
+Manfaat yang dihadirkan bagi masyarakat mencakup: mempercepat pertemuan antara warga yang butuh bantuan dengan warga yang mampu membantu, memperkuat rasa memiliki terhadap lingkungan lewat pengenalan wajah dan cerita tetangga, serta menyediakan saluran pelaporan masalah lingkungan (sampah, jalan rusak, lampu mati, dll.) yang mudah diakses lewat dashboard warga.
+
+## Tautan / Link Deploy Website
+https://neighbor-link-eight.vercel.app/
 
 ---
 
-## ✨ Apa yang bikin ini beda?
-
-Alih-alih halaman-halaman terpisah, seluruh situs hidup dalam **satu dunia 3D yang persisten**. Navigasi (Beranda / Tentang / Jelajahi Desa / Kontak) bukan pindah halaman, melainkan kamera yang terbang sinematik dari satu sudut desa ke sudut lainnya — dunia 3D-nya sendiri tidak pernah reload.
+<details>
+<summary><strong>📖 Dokumentasi teknis & panduan penggunaan lengkap</strong></summary>
 
 ## 🖥️ Menjalankan di Komputer Sendiri
 
@@ -194,6 +208,4 @@ src/
 
 Model 3D low-poly dari [Kenney](https://kenney.nl) (CC0 — bebas pakai).
 
----
-
-*Technology Connects. Humanity Lives Here.*
+</details>
