@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { StoryPanel } from '../components/ui/StoryPanel'
 import { VillageInfoPanel } from '../components/ui/VillageInfoPanel'
 import { CategoryFilter } from '../components/ui/CategoryFilter'
+import { ExploreProgress } from '../components/ui/ExploreProgress'
 import { useVillageWorld } from '../context/VillageWorldContext'
 import { VILLAGE_STORIES } from '../data/villageStories'
 
@@ -14,8 +15,14 @@ export function ExploreDestination() {
   const { flyToOverview, setInteractive, setTimeMode, activeStoryId, selectStory, categoryFilter, setCategoryFilter } =
     useVillageWorld()
   const [showHint, setShowHint] = useState(true)
+  const [visitedIds, setVisitedIds] = useState<Set<string>>(new Set())
 
   const activeStory = useMemo(() => VILLAGE_STORIES.find((s) => s.id === activeStoryId) ?? null, [activeStoryId])
+
+  useEffect(() => {
+    if (!activeStoryId) return
+    setVisitedIds((prev) => (prev.has(activeStoryId) ? prev : new Set(prev).add(activeStoryId)))
+  }, [activeStoryId])
 
   useEffect(() => {
     setInteractive(true)
@@ -47,6 +54,7 @@ export function ExploreDestination() {
     <>
       {!activeStoryId && <VillageInfoPanel />}
       {!activeStoryId && <CategoryFilter value={categoryFilter} onChange={setCategoryFilter} />}
+      {!activeStoryId && <ExploreProgress visited={visitedIds.size} total={VILLAGE_STORIES.length} />}
 
       <AnimatePresence>
         {activeStoryId && (
