@@ -71,7 +71,7 @@ src/
 
 ## 🙌 Kredit
 
-Model 3D low-poly dari [Kenney](https://kenney.nl) (CC0 — bebas pakai). Dibuat dengan bantuan [Claude Code](https://claude.com/claude-code).
+Model 3D low-poly dari [Kenney](https://kenney.nl) (CC0 — bebas pakai).
 
 ---
 
