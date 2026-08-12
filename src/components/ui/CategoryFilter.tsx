@@ -17,7 +17,7 @@ export function CategoryFilter({ value, onChange }: CategoryFilterProps) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.9, duration: 0.6 }}
-      className="pointer-events-auto fixed left-1/2 top-24 z-30 flex max-w-[92vw] -translate-x-1/2 flex-wrap items-center justify-center gap-2 sm:top-8"
+      className="pointer-events-auto fixed left-1/2 top-28 z-30 flex max-w-[92vw] -translate-x-1/2 flex-wrap items-center justify-center gap-2"
     >
       <button
         onClick={() => onChange(null)}
