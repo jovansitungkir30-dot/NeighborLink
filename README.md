@@ -47,11 +47,12 @@ Ini mode bebas jelajah. Kontrolnya:
 | **Buka cerita warga** | Klik ikon warga yang melayang di atas sebuah rumah |
 | **Kembali ke tampilan desa** | Tekan `Esc`, atau klik tombol "Kembali ke Desa" |
 | **Ubah waktu desa** | Klik badge fase hari (🌅/☀️/🌇/🌙) di pojok kanan atas — akan loncat ke fase berikutnya |
-| **Saring karakter** | Klik salah satu chip kategori di atas layar (Warga, Fasilitas Umum, UMKM & Pasar, Jasa & Kerajinan, Transportasi, Keamanan) |
+| **Saring karakter** | Klik salah satu chip kategori di bawah navbar (Warga, Fasilitas Umum, UMKM & Pasar, Jasa & Kerajinan, Transportasi, Keamanan) |
 
 Arahkan kursor ke ikon warga untuk lihat nama singkatnya sebelum klik. Setiap ikon berdenyut pelan supaya kelihatan jelas mana yang bisa diklik.
 
-Panel kecil di kiri layar menunjukkan ringkasan statistik desa, dengan tombol **"Gabung jadi Relawan"** langsung di situ.
+- **Kiri layar** — panel ringkasan statistik desa, dengan tombol **"Gabung jadi Relawan"** langsung di situ.
+- **Kanan bawah** — pelacak **"Progres Jelajah"**, menghitung berapa dari 40 warga yang sudah kamu temui, lengkap progress bar.
 
 ### 4. Kontak (`/contact`)
 Kamera berhenti di Balai Desa saat senja. Ada form kontak (nama/email/pesan), kartu info kontak, FAQ yang bisa diklik untuk dibuka-tutup, dan link ke peta desa interaktif.
@@ -91,6 +92,7 @@ Pengalaman sinematik alternatif yang digerakkan oleh scroll (bukan drag bebas), 
 - **Siklus siang–malam otomatis** — langit, arah & warna cahaya matahari, kabut, lentera jalan, jendela rumah yang menyala, dan kunang-kunang semuanya berubah mengikuti waktu (siklus penuh ±8 menit di mode Jelajahi Desa, atau dikunci di jam tertentu untuk tiap halaman: Beranda = pagi, Tentang = siang, Kontak = senja).
 - **40+ karakter warga yang bisa diklik**, masing-masing dengan potret 3D berputar, nama, usia, pekerjaan, kutipan, kebutuhan spesifik, rekomendasi pencocokan relawan dari AI (jumlah relawan + estimasi waktu), dan dampak positifnya.
 - **Filter kategori** untuk menyaring 40+ karakter berdasarkan bidang.
+- **Progres jelajah** — pelacak "X/40 warga ditemui" di pojok kanan bawah, biar eksplorasi terasa seperti misi kecil, bukan cuma jalan-jalan tanpa arah.
 - **Alur relawan kontekstual** — beda antara merespons kebutuhan spesifik seorang warga vs. mendaftar jadi relawan umum.
 - **Login demo** dengan penyimpanan sesi di `localStorage`, plus dashboard warga pasca-login.
 - **Peta desa yang padat & hidup** — lihat bagian "Isi Desa" di bawah.
