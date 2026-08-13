@@ -1,5 +1,5 @@
 import { useMemo, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import type { PointLight, Sprite } from 'three'
 import { AdditiveBlending } from 'three'
 import { COTTAGES, LANTERN_POSITIONS } from './villageLayout'
@@ -21,15 +21,29 @@ interface GlowLightProps {
 /** A point light paired with a visible soft-glow sprite, so a "lit window" or
  * "street lantern" actually reads as a warm dot from a distance (especially
  * from the night finale's aerial view) instead of just an invisible light. */
+// Point lights beyond this distance from the camera are hidden outright
+// (not just dimmed) — a light with visible=false is skipped entirely by
+// three's per-frame light collection, so this actually removes it from
+// every other object's fragment shader loop instead of just zeroing it out.
+const LIGHT_CULL_DISTANCE = 24
+
 function GlowLight({ position, glow, seed, color, distance, lightStrength, spriteScale, flickerSpeed, flickerDepth }: GlowLightProps) {
   const lightRef = useRef<PointLight>(null)
   const glowRef = useRef<Sprite>(null)
   const texture = useGlowTexture()
+  const camera = useThree((s) => s.camera)
 
   useFrame((state) => {
     const flicker = 1 - flickerDepth + flickerDepth * Math.sin(state.clock.elapsedTime * flickerSpeed + seed * 11)
     const value = glow > 0.001 ? glow * flicker : 0
-    if (lightRef.current) lightRef.current.intensity = value * lightStrength
+    const dx = camera.position.x - position[0]
+    const dy = camera.position.y - position[1]
+    const dz = camera.position.z - position[2]
+    const near = dx * dx + dy * dy + dz * dz < LIGHT_CULL_DISTANCE * LIGHT_CULL_DISTANCE
+    if (lightRef.current) {
+      lightRef.current.visible = value > 0.001 && near
+      lightRef.current.intensity = value * lightStrength
+    }
     if (glowRef.current) glowRef.current.material.opacity = value * 0.95
   })
 

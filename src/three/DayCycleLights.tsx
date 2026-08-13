@@ -26,13 +26,13 @@ export function DayCycleLights({ sample }: DayCycleLightsProps) {
         intensity={sample.sunIntensity}
         color={sample.sunColor}
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-camera-near={1}
-        shadow-camera-far={80}
-        shadow-camera-left={-30}
-        shadow-camera-right={30}
-        shadow-camera-top={30}
-        shadow-camera-bottom={-30}
+        shadow-camera-far={40}
+        shadow-camera-left={-18}
+        shadow-camera-right={18}
+        shadow-camera-top={18}
+        shadow-camera-bottom={-18}
         shadow-bias={-0.0004}
       />
       <hemisphereLight args={[sample.hemiSky, sample.hemiGround, sample.hemiIntensity]} />

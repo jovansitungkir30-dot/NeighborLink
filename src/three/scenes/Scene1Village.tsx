@@ -3,9 +3,9 @@ import { useFrame } from '@react-three/fiber'
 import { Sparkles } from '@react-three/drei'
 import type { Group } from 'three'
 import { Ground } from '../world/Ground'
-import { Cottage } from '../world/Cottage'
 import { TreeCluster } from '../world/TreeCluster'
 import { GlbProp } from '../world/GlbProp'
+import { InstancedProps } from '../world/InstancedProps'
 import { Villager } from '../world/Villager'
 import { ChimneySmoke3D } from '../world/ChimneySmoke3D'
 import { Butterfly3D } from '../world/Butterfly3D'
@@ -15,7 +15,9 @@ import { OpenBook } from '../world/OpenBook'
 import { RunningDog } from '../world/RunningDog'
 import { WaterPond } from '../world/WaterPond'
 import { GrowingSapling } from '../world/GrowingSapling'
-import { COTTAGES } from '../world/villageLayout'
+import { COTTAGES, buildCottageInstances } from '../world/villageLayout'
+
+const COTTAGE_INSTANCES = buildCottageInstances(COTTAGES)
 
 const YARD_DETAILS: { src: string; pos: [number, number, number]; rot: number; scale?: number }[] = [
   { src: 'town/hedge', pos: [-6.2, 0, -0.7], rot: 0.3 },
@@ -57,9 +59,7 @@ export function Scene1Village() {
     <group>
       <Ground />
 
-      {COTTAGES.map((c, i) => (
-        <Cottage key={i} position={c.pos} rotationY={c.rot} stories={c.stories} doorFacing={c.door} />
-      ))}
+      <InstancedProps items={COTTAGE_INSTANCES} castShadow />
 
       {smokeChimneys.map((pos, i) => (
         <ChimneySmoke3D key={i} position={pos} />
@@ -74,8 +74,8 @@ export function Scene1Village() {
       <TreeCluster position={[-8.5, 0, 5.5]} radius={2.4} count={5} seed={7} />
       <TreeCluster position={[6.5, 0, -1]} radius={2} count={4} seed={8} />
 
-      <GlbProp src="town/windmill" position={[-15, 0, -6.5]} rotation={[0, 0.6, 0]} scale={1.6} />
-      <GlbProp src="town/fountain-round-detail" position={[0.5, 0, 1.5]} scale={1.1} />
+      <GlbProp src="town/windmill" position={[-15, 0, -6.5]} rotation={[0, 0.6, 0]} scale={1.6} castShadow />
+      <GlbProp src="town/fountain-round-detail" position={[0.5, 0, 1.5]} scale={1.1} castShadow />
       <GlbProp src="town/fountain-round" position={[0.5, 0.05, 1.5]} scale={1.1} />
 
       {/* small market row near the fountain */}

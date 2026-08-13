@@ -5,6 +5,43 @@ export interface CottageLayout {
   door: 0 | 1 | 2 | 3
 }
 
+export interface CottagePartPlacement {
+  kind: string
+  position: [number, number, number]
+  rotationY: number
+  scale: number
+}
+
+const SIDE_ROTATIONS_Y = [0, Math.PI / 2, Math.PI, -Math.PI / 2]
+
+/** Flattens every cottage into its wall/roof/chimney parts (matching
+ * <Cottage>'s own assembly logic, which every entry here uses at its
+ * defaults: roof="gable", chimney=true) so the whole village core can be
+ * drawn as a handful of InstancedMesh draw calls instead of one GLB clone
+ * per wall/roof/chimney per building. Because both the per-building rotation
+ * and each wall's local sweep rotation are pure Y-axis rotations, and the
+ * local offset is a pure Y translation, world transform = simple addition —
+ * no matrix composition needed. */
+export function buildCottageInstances(cottages: CottageLayout[]): CottagePartPlacement[] {
+  const items: CottagePartPlacement[] = []
+  for (const c of cottages) {
+    for (let row = 0; row < c.stories; row++) {
+      for (let side = 0; side < 4; side++) {
+        const kind = row === 0 && side === c.door ? 'town/wall-wood-door' : 'town/wall-wood-window-shutters'
+        items.push({
+          kind,
+          position: [c.pos[0], c.pos[1] + row, c.pos[2]],
+          rotationY: c.rot + SIDE_ROTATIONS_Y[side],
+          scale: 1,
+        })
+      }
+    }
+    items.push({ kind: 'town/roof-gable', position: [c.pos[0], c.pos[1] + c.stories, c.pos[2]], rotationY: c.rot, scale: 1 })
+    items.push({ kind: 'town/chimney', position: [c.pos[0], c.pos[1] + c.stories, c.pos[2]], rotationY: c.rot, scale: 1 })
+  }
+  return items
+}
+
 /** Shared village layout data — used by Scene1Village (to place cottage geometry)
  * and NightLayer (to place matching window-glow lights) so the two never drift apart. */
 export const COTTAGES: CottageLayout[] = [

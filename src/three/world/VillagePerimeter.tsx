@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { GlbProp } from './GlbProp'
+import { InstancedProps, type PropPlacement } from './InstancedProps'
 
 interface FenceSegment {
   pos: [number, number, number]
@@ -55,16 +55,13 @@ function buildPerimeter(center: [number, number], radius: number, gates: Gate[],
  * rivers at every point by construction (radius capped below the east
  * river's distance from the center). */
 export function VillagePerimeter() {
-  const { fences, gateMarkers } = useMemo(() => buildPerimeter(CENTER, RADIUS, GATES), [])
+  const items = useMemo<PropPlacement[]>(() => {
+    const { fences, gateMarkers } = buildPerimeter(CENTER, RADIUS, GATES)
+    return [
+      ...fences.map((f) => ({ kind: 'nature/fence_simple', position: f.pos, rotationY: f.rot, scale: 1.25 })),
+      ...gateMarkers.map((g) => ({ kind: 'nature/fence_gate', position: g.pos, rotationY: g.rot, scale: 1 })),
+    ]
+  }, [])
 
-  return (
-    <group>
-      {fences.map((f, i) => (
-        <GlbProp key={i} src="nature/fence_simple" position={f.pos} rotation={[0, f.rot, 0]} scale={[1.25, 1, 1]} />
-      ))}
-      {gateMarkers.map((g, i) => (
-        <GlbProp key={`gate-${i}`} src="nature/fence_gate" position={g.pos} rotation={[0, g.rot, 0]} />
-      ))}
-    </group>
-  )
+  return <InstancedProps items={items} />
 }

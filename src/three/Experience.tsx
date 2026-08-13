@@ -12,8 +12,8 @@ interface ExperienceProps {
 export function Experience({ sample, children }: ExperienceProps) {
   return (
     <Canvas
-      shadows="percentage"
-      dpr={[1, 1.75]}
+      shadows="basic"
+      dpr={[1, 1.5]}
       camera={{ fov: 42, near: 0.5, far: 220, position: [0, 6, 18] }}
       gl={{
         antialias: true,

@@ -1,4 +1,4 @@
-import type { RefObject } from 'react'
+import { memo, type RefObject } from 'react'
 import { Experience } from './Experience'
 import { GlbProp } from './world/GlbProp'
 import { Scene1Village } from './scenes/Scene1Village'
@@ -22,6 +22,7 @@ import { Clouds } from './world/Clouds'
 import { RoadNetwork } from './world/RoadNetwork'
 import { VillagePerimeter } from './world/VillagePerimeter'
 import { TreeCluster } from './world/TreeCluster'
+import { InstancedForest } from './world/InstancedForest'
 import { Villager } from './world/Villager'
 import { BuildingHotspot } from './world/BuildingHotspot'
 import { COTTAGES } from './world/villageLayout'
@@ -126,6 +127,10 @@ const FOREST_SKIP: [number, number][] = [
 ]
 const FOREST_RING_1 = ringOfTrees(15.5, 26, FOREST_SKIP, 200)
 const FOREST_RING_2 = ringOfTrees(19.5, 30, FOREST_SKIP, 300)
+// Module-level so this stays one stable array reference across re-renders —
+// VillageWorld re-renders every 250ms while the day-cycle auto-advances, and
+// an inline spread here would otherwise rebuild the whole forest's instance
+// matrices every tick even though the forest itself never actually changes.
 
 // Tree belts filling the land outside the fence, between the village and
 // the Hills backdrop, so the perimeter doesn't open onto bare ground.
@@ -161,6 +166,8 @@ const INNER_TREE_CLUSTERS: { pos: [number, number, number]; radius: number; coun
   { pos: [-9, 0, 6.5], radius: 1.6, count: 3, seed: 37 },
   { pos: [9, 0, -7], radius: 1.5, count: 3, seed: 38 },
 ]
+
+const FOREST_SPOTS: TreeSpot[] = [...OUTER_TREE_CLUSTERS, ...FOREST_RING_1, ...FOREST_RING_2, ...INNER_TREE_CLUSTERS]
 
 const MORE_VILLAGER_SCATTER: {
   pos: [number, number, number]
@@ -270,6 +277,110 @@ const COTTAGE_VILLAGERS: VillagerSpot[] = COTTAGES.filter((_, i) => i % 2 === 0)
   }
 })
 
+interface StaticVillageProps {
+  cameraRef: RefObject<FreeRoamCameraHandle | null>
+  /** free-roam drag/zoom + building hotspots — only on Explore Village */
+  interactive: boolean
+  onSelectStory: (id: string) => void
+  /** when set, only hotspots in this category render — the rest stay
+   * hidden rather than dimmed, so a filtered view doesn't feel cluttered */
+  categoryFilter?: StoryCategory | null
+}
+
+/** Everything in the village that doesn't depend on the day-cycle sample —
+ * split out and memoized so it never re-renders on the 250ms auto day-cycle
+ * tick in VillageWorldContext. Only NightLayer (which reads `sample` for
+ * window/lantern glow) needs to re-render that often; re-running this whole
+ * multi-thousand-element tree 4x/second for no visual change was a real
+ * chunk of the reported lag. */
+const StaticVillage = memo(function StaticVillage({ cameraRef, interactive, onSelectStory, categoryFilter }: StaticVillageProps) {
+  const visibleStories = categoryFilter
+    ? VILLAGE_STORIES.filter((s) => storyCategory(s.id) === categoryFilter)
+    : VILLAGE_STORIES
+  return (
+    <>
+      <FreeRoamCamera ref={cameraRef} overview={VILLAGE_OVERVIEW} interactive={interactive} />
+
+      <Scene1Village />
+      <StreetLanterns />
+      <GuardPost position={[0, 0, 10.5]} />
+
+      <VillageHall position={[9.5, 0, -2]} />
+      <CommunityFarm position={[-17, 0, 2]} />
+      <TreeOfHope position={[7, 0, -4.5]} />
+
+      <River points={RIVER_POINTS} />
+      {CANAL_PATHS.map((points, i) => (
+        <River key={i} points={points} width={0.6} />
+      ))}
+      <GlbProp src="nature/bridge_wood" position={[15.9, 0, 1]} rotation={[0, Math.PI / 2, 0]} scale={1.1} />
+
+      <River points={RIVER_POINTS_WEST} />
+      {CANAL_PATHS_WEST.map((points, i) => (
+        <River key={`west-${i}`} points={points} width={0.6} />
+      ))}
+      <GlbProp src="nature/bridge_wood" position={[-23.9, 0, 2]} rotation={[0, Math.PI / 2, 0]} scale={1.1} />
+
+      {RICE_FIELD_SPOTS.map((r, i) => (
+        <RiceField key={i} position={r.pos} rows={r.rows} cols={r.cols} />
+      ))}
+      <RiceField position={[16.5, 0, -3.5]} rows={3} cols={4} />
+      <InstancedForest spots={FOREST_SPOTS} />
+      <Hills />
+      <Clouds />
+      <VillagePerimeter />
+      <VillageGate position={[0, 0, 13]} />
+      <TreeCluster position={[-3.5, 0, 15.5]} radius={1.8} count={5} seed={51} />
+      <TreeCluster position={[3.5, 0, 15.5]} radius={1.8} count={5} seed={52} />
+      <Playground position={[5.2, 0, -9.4]} rotationY={0.4} />
+      <RoadNetwork />
+
+      {VILLAGER_SCATTER.map((v, i) => (
+        <Villager key={i} variant={v.variant} position={v.pos} rotationY={v.rot} animation={v.animation} scale={v.scale} />
+      ))}
+      {MORE_VILLAGER_SCATTER.map((v, i) => (
+        <Villager key={`more-${i}`} variant={v.variant} position={v.pos} rotationY={v.rot} animation={v.animation} scale={v.scale} />
+      ))}
+      {COTTAGE_VILLAGERS.map((v, i) => (
+        <Villager key={`cottage-${i}`} variant={v.variant} position={v.pos} rotationY={v.rot} animation={v.animation} scale={v.scale} />
+      ))}
+
+      {GARDEN_SPOTS.map((g, i) => (
+        <GardenBed key={i} position={g.pos} rotationY={g.rot} />
+      ))}
+      {BENCH_SPOTS.map((b, i) => (
+        <Bench key={i} position={b.pos} rotationY={b.rot} />
+      ))}
+      {BICYCLE_SPOTS.map((b, i) => (
+        <Bicycle key={i} position={b.pos} rotationY={b.rot} color={b.color} />
+      ))}
+
+      {BIRD_SPOTS.map((b, i) => (
+        <Bird3D key={i} center={b.center} radius={b.radius} height={b.height} offset={b.offset} color={b.color} speed={0.28} />
+      ))}
+
+      <Critter3D kind="cat" position={[-9.7, 0, 2.8]} rotationY={0.6} />
+      <Critter3D kind="cat" position={[0.9, 0, -1.8]} rotationY={-1.2} />
+      <Critter3D kind="cat" position={[-4.3, 0, 7.9]} rotationY={2.1} />
+      <Critter3D kind="dog" position={[9.5, 0, -2]} wander={{ radius: 1.9, speed: 0.5 }} />
+      <Critter3D kind="dog" position={[-17, 0, 2]} wander={{ radius: 2.2, speed: 0.45 }} />
+
+      {interactive &&
+        visibleStories.map((story) => (
+          <BuildingHotspot
+            key={story.id}
+            position={story.position}
+            icon={story.icon}
+            label={story.tooltip}
+            onSelect={() => {
+              cameraRef.current?.flyTo(story.cameraStop).then(() => onSelectStory(story.id))
+            }}
+          />
+        ))}
+    </>
+  )
+})
+
 interface VillageWorldProps {
   sample: DaySample
   cameraRef: RefObject<FreeRoamCameraHandle | null>
@@ -285,102 +396,11 @@ interface VillageWorldProps {
  * always mounted once any village route is active so switching between
  * Home/About/Explore/Contact never remounts the Canvas. */
 export function VillageWorld({ sample, cameraRef, interactive, onSelectStory, categoryFilter }: VillageWorldProps) {
-  const visibleStories = categoryFilter
-    ? VILLAGE_STORIES.filter((s) => storyCategory(s.id) === categoryFilter)
-    : VILLAGE_STORIES
   return (
     <div className="fixed inset-0">
       <Experience sample={sample}>
-        <FreeRoamCamera ref={cameraRef} overview={VILLAGE_OVERVIEW} interactive={interactive} />
-
-        <Scene1Village />
+        <StaticVillage cameraRef={cameraRef} interactive={interactive} onSelectStory={onSelectStory} categoryFilter={categoryFilter} />
         <NightLayer sample={sample} extraLanternSpots={STREET_LANTERN_SPOTS} />
-        <StreetLanterns />
-        <GuardPost position={[0, 0, 10.5]} />
-
-        <VillageHall position={[9.5, 0, -2]} />
-        <CommunityFarm position={[-17, 0, 2]} />
-        <TreeOfHope position={[7, 0, -4.5]} />
-
-        <River points={RIVER_POINTS} />
-        {CANAL_PATHS.map((points, i) => (
-          <River key={i} points={points} width={0.6} />
-        ))}
-        <GlbProp src="nature/bridge_wood" position={[15.9, 0, 1]} rotation={[0, Math.PI / 2, 0]} scale={1.1} />
-
-        <River points={RIVER_POINTS_WEST} />
-        {CANAL_PATHS_WEST.map((points, i) => (
-          <River key={`west-${i}`} points={points} width={0.6} />
-        ))}
-        <GlbProp src="nature/bridge_wood" position={[-23.9, 0, 2]} rotation={[0, Math.PI / 2, 0]} scale={1.1} />
-
-        {RICE_FIELD_SPOTS.map((r, i) => (
-          <RiceField key={i} position={r.pos} rows={r.rows} cols={r.cols} />
-        ))}
-        <RiceField position={[16.5, 0, -3.5]} rows={3} cols={4} />
-        {OUTER_TREE_CLUSTERS.map((t, i) => (
-          <TreeCluster key={i} position={t.pos} radius={t.radius} count={t.count} seed={t.seed} />
-        ))}
-        {FOREST_RING_1.map((t, i) => (
-          <TreeCluster key={`ring1-${i}`} position={t.pos} radius={t.radius} count={t.count} seed={t.seed} />
-        ))}
-        {FOREST_RING_2.map((t, i) => (
-          <TreeCluster key={`ring2-${i}`} position={t.pos} radius={t.radius} count={t.count} seed={t.seed} />
-        ))}
-        {INNER_TREE_CLUSTERS.map((t, i) => (
-          <TreeCluster key={`inner-${i}`} position={t.pos} radius={t.radius} count={t.count} seed={t.seed} />
-        ))}
-        <Hills />
-        <Clouds />
-        <VillagePerimeter />
-        <VillageGate position={[0, 0, 13]} />
-        <TreeCluster position={[-3.5, 0, 15.5]} radius={1.8} count={5} seed={51} />
-        <TreeCluster position={[3.5, 0, 15.5]} radius={1.8} count={5} seed={52} />
-        <Playground position={[5.2, 0, -9.4]} rotationY={0.4} />
-        <RoadNetwork />
-
-        {VILLAGER_SCATTER.map((v, i) => (
-          <Villager key={i} variant={v.variant} position={v.pos} rotationY={v.rot} animation={v.animation} scale={v.scale} />
-        ))}
-        {MORE_VILLAGER_SCATTER.map((v, i) => (
-          <Villager key={`more-${i}`} variant={v.variant} position={v.pos} rotationY={v.rot} animation={v.animation} scale={v.scale} />
-        ))}
-        {COTTAGE_VILLAGERS.map((v, i) => (
-          <Villager key={`cottage-${i}`} variant={v.variant} position={v.pos} rotationY={v.rot} animation={v.animation} scale={v.scale} />
-        ))}
-
-        {GARDEN_SPOTS.map((g, i) => (
-          <GardenBed key={i} position={g.pos} rotationY={g.rot} />
-        ))}
-        {BENCH_SPOTS.map((b, i) => (
-          <Bench key={i} position={b.pos} rotationY={b.rot} />
-        ))}
-        {BICYCLE_SPOTS.map((b, i) => (
-          <Bicycle key={i} position={b.pos} rotationY={b.rot} color={b.color} />
-        ))}
-
-        {BIRD_SPOTS.map((b, i) => (
-          <Bird3D key={i} center={b.center} radius={b.radius} height={b.height} offset={b.offset} color={b.color} speed={0.28} />
-        ))}
-
-        <Critter3D kind="cat" position={[-9.7, 0, 2.8]} rotationY={0.6} />
-        <Critter3D kind="cat" position={[0.9, 0, -1.8]} rotationY={-1.2} />
-        <Critter3D kind="cat" position={[-4.3, 0, 7.9]} rotationY={2.1} />
-        <Critter3D kind="dog" position={[9.5, 0, -2]} wander={{ radius: 1.9, speed: 0.5 }} />
-        <Critter3D kind="dog" position={[-17, 0, 2]} wander={{ radius: 2.2, speed: 0.45 }} />
-
-        {interactive &&
-          visibleStories.map((story) => (
-            <BuildingHotspot
-              key={story.id}
-              position={story.position}
-              icon={story.icon}
-              label={story.tooltip}
-              onSelect={() => {
-                cameraRef.current?.flyTo(story.cameraStop).then(() => onSelectStory(story.id))
-              }}
-            />
-          ))}
       </Experience>
     </div>
   )

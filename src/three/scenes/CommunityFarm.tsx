@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { GlbProp } from '../world/GlbProp'
+import { InstancedProps, type PropPlacement } from '../world/InstancedProps'
 import { Villager } from '../world/Villager'
 import { Butterfly3D } from '../world/Butterfly3D'
 
@@ -15,13 +16,15 @@ const SPACING = 0.85
  * fenced, with a scarecrow standing watch. Built entirely from existing
  * Kenney nature-kit crop props, no new geometry needed for the plants. */
 export function CommunityFarm({ position = [0, 0, 0] }: CommunityFarmProps) {
-  const wheatRows = useMemo(() => {
-    const items: { pos: [number, number, number]; rot: number }[] = []
+  const wheatRows = useMemo<PropPlacement[]>(() => {
+    const items: PropPlacement[] = []
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
         items.push({
-          pos: [(c - (COLS - 1) / 2) * SPACING, 0, (r - (ROWS - 1) / 2) * SPACING - 1.4],
-          rot: ((r * COLS + c) % 4) * 0.4,
+          kind: 'nature/crops_wheatStageB',
+          position: [(c - (COLS - 1) / 2) * SPACING, 0, (r - (ROWS - 1) / 2) * SPACING - 1.4],
+          rotationY: ((r * COLS + c) % 4) * 0.4,
+          scale: 1,
         })
       }
     }
@@ -30,9 +33,7 @@ export function CommunityFarm({ position = [0, 0, 0] }: CommunityFarmProps) {
 
   return (
     <group position={position}>
-      {wheatRows.map((w, i) => (
-        <GlbProp key={i} src="nature/crops_wheatStageB" position={w.pos} rotation={[0, w.rot, 0]} scale={1} />
-      ))}
+      <InstancedProps items={wheatRows} />
 
       <GlbProp src="nature/crop_carrot" position={[-2.6, 0, 1.8]} rotation={[0, 0.3, 0]} />
       <GlbProp src="nature/crop_carrot" position={[-2.1, 0, 2.1]} rotation={[0, 1.1, 0]} />

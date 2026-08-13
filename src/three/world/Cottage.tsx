@@ -41,11 +41,12 @@ export function Cottage({
             src={row === 0 && side === doorFacing ? 'town/wall-wood-door' : 'town/wall-wood-window-shutters'}
             position={[0, row, 0]}
             rotation={rot}
+            castShadow
           />
         ))
       )}
-      <GlbProp src={roofFile} position={[0, roofY, 0]} />
-      {chimney && <GlbProp src="town/chimney" position={[0, roofY, 0]} />}
+      <GlbProp src={roofFile} position={[0, roofY, 0]} castShadow />
+      {chimney && <GlbProp src="town/chimney" position={[0, roofY, 0]} castShadow />}
     </group>
   )
 }

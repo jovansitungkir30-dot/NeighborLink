@@ -18,7 +18,7 @@ export function TreeOfHope({ position = [0, 0, 0] }: TreeOfHopeProps) {
 
   return (
     <group position={position}>
-      <GlbProp src="nature/tree_fat" scale={2.6} />
+      <GlbProp src="nature/tree_fat" scale={2.6} castShadow />
 
       <pointLight position={[0, 3.5, 0]} color="#FFD27A" intensity={1.4} distance={7} decay={2} />
       <sprite position={[0, 3.2, 0]} scale={[5, 5, 1]}>
