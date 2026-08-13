@@ -1,5 +1,7 @@
 import {
   createContext,
+  lazy,
+  Suspense,
   useCallback,
   useContext,
   useEffect,
@@ -8,7 +10,6 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { VillageWorld } from '../three/VillageWorld'
 import { SkyGradient } from '../components/ui/SkyGradient'
 import { PhaseIndicator } from '../three/PhaseIndicator'
 import { sampleDayCycle } from '../three/dayCycle'
@@ -29,6 +30,11 @@ interface VillageWorldContextValue {
 }
 
 const VillageWorldContext = createContext<VillageWorldContextValue | null>(null)
+
+// Lazy-loaded — pulls in the full three.js/@react-three/fiber/drei scene
+// graph, so routes that never set `active` (e.g. /fitur, /dashboard,
+// /journey) shouldn't pay to download it.
+const VillageWorld = lazy(() => import('../three/VillageWorld').then((m) => ({ default: m.VillageWorld })))
 
 export function useVillageWorld() {
   const ctx = useContext(VillageWorldContext)
@@ -105,13 +111,15 @@ export function VillageWorldProvider({ active, children }: VillageWorldProviderP
       {active && (
         <>
           <SkyGradient sample={daySample} />
-          <VillageWorld
-            sample={daySample}
-            cameraRef={cameraRef}
-            interactive={interactive}
-            onSelectStory={selectStory}
-            categoryFilter={categoryFilter}
-          />
+          <Suspense fallback={null}>
+            <VillageWorld
+              sample={daySample}
+              cameraRef={cameraRef}
+              interactive={interactive}
+              onSelectStory={selectStory}
+              categoryFilter={categoryFilter}
+            />
+          </Suspense>
           <PhaseIndicator sample={daySample} onClick={cyclePhase} />
         </>
       )}
