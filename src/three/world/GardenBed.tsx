@@ -10,7 +10,7 @@ interface GardenBedProps {
 export function GardenBed({ position = [0, 0, 0], rotationY = 0 }: GardenBedProps) {
   return (
     <group position={position} rotation={[0, rotationY, 0]}>
-      <mesh position={[0, 0.09, 0]} castShadow receiveShadow>
+      <mesh position={[0, 0.09, 0]} receiveShadow>
         <boxGeometry args={[1.5, 0.18, 0.9]} />
         <meshStandardMaterial color="#7C5330" roughness={1} />
       </mesh>
