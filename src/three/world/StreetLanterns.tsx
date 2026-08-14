@@ -1,4 +1,5 @@
-import { GlbProp } from './GlbProp'
+import { useMemo } from 'react'
+import { InstancedProps, type PropPlacement } from './InstancedProps'
 import { CONNECTORS } from './RoadNetwork'
 import { CENTER, RADIUS, GATES } from './VillagePerimeter'
 
@@ -49,11 +50,9 @@ export const STREET_LANTERN_SPOTS: [number, number][] = [...roadLanternPositions
  * the perimeter fence — the light/glow itself is handled by NightLayer,
  * which reuses STREET_LANTERN_SPOTS so post and glow always match. */
 export function StreetLanterns() {
-  return (
-    <group>
-      {STREET_LANTERN_SPOTS.map(([x, z], i) => (
-        <GlbProp key={i} src="town/lantern" position={[x, 0, z]} />
-      ))}
-    </group>
+  const items = useMemo<PropPlacement[]>(
+    () => STREET_LANTERN_SPOTS.map(([x, z]) => ({ kind: 'town/lantern', position: [x, 0, z], rotationY: 0, scale: 1 })),
+    []
   )
+  return <InstancedProps items={items} />
 }

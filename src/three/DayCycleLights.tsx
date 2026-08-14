@@ -38,16 +38,18 @@ export function DayCycleLights({ sample }: DayCycleLightsProps) {
       <hemisphereLight args={[sample.hemiSky, sample.hemiGround, sample.hemiIntensity]} />
       <ambientLight intensity={sample.ambientIntensity} color={sample.ambientColor} />
 
-      <sprite position={sample.sunPosition} scale={[11, 11, 1]}>
-        <spriteMaterial
-          map={glowTexture}
-          color={sample.sunColor}
-          transparent
-          opacity={glowOpacity}
-          depthWrite={false}
-          blending={AdditiveBlending}
-        />
-      </sprite>
+      {glowOpacity > 0.01 && (
+        <sprite position={sample.sunPosition} scale={[11, 11, 1]}>
+          <spriteMaterial
+            map={glowTexture}
+            color={sample.sunColor}
+            transparent
+            opacity={glowOpacity}
+            depthWrite={false}
+            blending={AdditiveBlending}
+          />
+        </sprite>
+      )}
     </>
   )
 }
