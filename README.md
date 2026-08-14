@@ -6,6 +6,7 @@ Politeknik Siber dan Sandi Negara
 ## Anggota Tim
 - Ketua        : Jovan Diego Benedictus Situngkir
   - Anggota 1: Johanes Enda Panahatan Simorangkir
+  - Anggota 2: Jonathan Kevin Binsar Pangaribuan
 
 ## Deskripsi Karya
 NeighborLink lahir dari keresahan akan isolasi sosial di lingkungan tempat tinggal modern: tetangga yang tinggal berdampingan tapi jarang benar-benar saling mengenal, sementara banyak kebutuhan sehari-hari warga — mulai dari bantuan tenaga, keahlian, sampai sekadar teman bicara — sebenarnya bisa dipenuhi oleh tetangga sendiri jika saja ada ruang yang mempertemukan mereka.
